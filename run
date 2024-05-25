@@ -1,0 +1,12 @@
+#!/bin/bash
+
+git pull
+
+docker stop cross_hack
+docker rm dcross_hack
+docker rmi cross_hack_img
+
+docker build -t cross_hack_img .
+docker run -d --net=host --restart=always --name cross_hack cross_hack_img
+
+echo "start cross_hack"
