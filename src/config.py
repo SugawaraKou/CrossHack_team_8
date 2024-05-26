@@ -4,7 +4,7 @@ TG_TOKEN = '7407431084:AAGjqRWr21OaRlWE8mj04lcdI9FMFJjP0-M'
 TG_ADMIN_USER_ID = [687807958]  # user_id админинов
 LIFE_TG_TOKEN = 300  # в секундах
 
-TG_HREF = 'https://t.me/sugawara_hackathon_bot?start='
+TG_HREF = 'https://t.me/knowledge_keeper_meow_bot?start='
 
 CON_DB = {
     'dbname': 'crosshack',
