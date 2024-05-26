@@ -9,7 +9,7 @@ import config
 
 def create_token(user_creator):
     db = database.Connection()
-
+    # создание токена
     user_id = ''.join(random.choice('0123456789') for i in range(15))
     letters = string.ascii_lowercase
     username = ''.join(random.choice(letters) for i in range(12))
@@ -41,5 +41,7 @@ def create_token(user_creator):
     # Сохранение QR-кода как картинку
     img = qr.make_image(fill_color="black", back_color="white")
     img.save("qr_code.png")
-    db.add_new_toke(finish_message, user_creator)
+
+    db.add_new_toke(finish_message, user_creator)  # добавление в бд токена и имя пользователя создавшего токен
+
     return finish_message

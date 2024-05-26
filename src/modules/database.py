@@ -7,7 +7,7 @@ import pytz
 
 class Connection:
     def __init__(self, dbname='crosshack', user='sugawara', host='localhost', password='1qw23er4', port='5432'):
-
+        # подключение к бд
         self.dbname = dbname
         self.user = user
         self.host = host
@@ -23,7 +23,7 @@ class Connection:
         )
         self.cursor = self.connection.cursor()
 
-    def execute(self, query):
+    def execute(self, query):  # запрос к бд, если нет соединения (отвалилась бд), то переподключиться
         try:
             self.cursor.execute(query)
         except Exception as e:
@@ -38,25 +38,25 @@ class Connection:
             self.cursor.execute(query)
         return False
 
-    def check_token(self, token):
+    def check_token(self, token):  # проверка токена
         self.execute(f"select * from token_life where token_user='{token}'")
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]
         return result
 
-    def get_users(self, user_id):
+    def get_users(self, user_id):  # получение списка пользователей
         self.execute(f"select * from cross_users where user_id != {user_id}")
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]
         return result
 
-    def get_id_user(self, user_id):
+    def get_id_user(self, user_id):  # получение списка пользователй по id
         self.execute(f"select * from cross_users where user_id = {user_id}")
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]
         return result[0]
 
-    def check_user_id(self, user_id):
+    def check_user_id(self, user_id):  # проверка пользователя
         self.execute(f"select user_id from cross_users where user_id = {user_id}")
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]
@@ -65,33 +65,33 @@ class Connection:
         except:
             return False
 
-    def del_user(self, user_id):
+    def del_user(self, user_id):  # удаление пользователя
         self.execute(f'delete from cross_users where user_id={user_id}')
         self.connection.commit()
 
-    def registration_user(self, data):
+    def registration_user(self, data):  # регистрация пользователя
         query = self.cursor.mogrify('insert into cross_users values (%s, %s, %s, %s)',
                                     (data.id, data.username, data.first_name, data.last_name))
         self.execute(query)
         self.connection.commit()
 
-    def del_token(self, token):
+    def del_token(self, token):  # удаление токена
         self.execute(f"delete from token_life where token_user='{token}'")
         self.connection.commit()
 
-    def get_tokens(self):
+    def get_tokens(self):  # получение токена
         self.execute('select token_user, timestamp from token_life')
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]
         return result
 
-    def get_list_materials(self, name_materials):
+    def get_list_materials(self, name_materials):  # получение списка материалов
         self.execute(f'select * from {name_materials}')
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]
         return result
 
-    def add_new_toke(self, token, user_creator):
+    def add_new_toke(self, token, user_creator):  # добавление ноаого токена
         self.execute(f"insert into token_life values ('{token}', "
                      f"{datetime.now(pytz.timezone('Europe/Moscow')).timestamp()}, '{user_creator}')")
         self.connection.commit()
@@ -102,7 +102,7 @@ class Connection:
                   self.cursor.fetchall()]
         return result
 
-    def data_search(self, st):
+    def data_search(self, st):  # поиск
         self.execute(f"select * from book where name like '%{st}%'")
         result = [dict((self.cursor.description[i][0], value) for i, value in enumerate(row)) for row in
                   self.cursor.fetchall()]

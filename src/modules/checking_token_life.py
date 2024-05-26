@@ -7,8 +7,8 @@ from datetime import datetime
 import time
 import pytz
 
-from modules import database
-import config
+import database
+from src import config
 
 db = database.Connection()
 

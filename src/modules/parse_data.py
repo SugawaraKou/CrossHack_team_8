@@ -1,8 +1,13 @@
+# -*- coding: utf-8 -*-
+"""
+Парсинг данных из google таблицы и запись их в бд
+"""
+
 import json
 import google.auth
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-import config
+from src import config
 
 # Load credentials
 creds = service_account.Credentials.from_service_account_file(

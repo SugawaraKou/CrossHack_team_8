@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+"""
+Сам бот
+"""
+
 import telebot
 from telebot import types
 
 from modules import database
-from src import tg_token_user
+from modules import tg_token_user
 import config
 
 
@@ -35,12 +39,12 @@ def start_message(message):
     button2 = types.KeyboardButton(text='/Cписок_курсов')
     keyboard.add(button1, button2)
 
-    if message.chat.id in config.TG_ADMIN_USER_ID:
+    if message.chat.id in config.TG_ADMIN_USER_ID:  # для админа
         button3 = types.KeyboardButton(text='/Удалить_пользователя')
         button4 = types.KeyboardButton(text='/Добавить_пользователя')
         keyboard.add(button3, button4)
         bot.send_message(message.chat.id, "Привет админ ✌️", reply_markup=keyboard)
-    elif message.chat.id == db.check_user_id(message.chat.id):
+    elif message.chat.id == db.check_user_id(message.chat.id):  # для обычных пользователей
         bot.send_message(message.chat.id, "Привет пользователь ✌️", reply_markup=keyboard)
 
 
@@ -53,7 +57,7 @@ def add_user(message):
         user_token = tg_token_user.create_token(message.chat.username)
         img = open('qr_code.png', 'rb')
         keyboard = types.InlineKeyboardMarkup()
-        keyboard.add(types.InlineKeyboardButton('Ссылка', url=config.TG_HREF+user_token))
+        keyboard.add(types.InlineKeyboardButton('Ссылка', url=config.TG_HREF+user_token))   # отправить qr и ссылку
         bot.send_photo(message.chat.id, img, reply_markup=keyboard)
     else:
         bot.send_message(message.chat.id, "У вас нет прав(")
@@ -80,12 +84,12 @@ def callback_query(call):
     """
     Обработка для удаления пользователей и отображения списка учебных материалов
     """
-    if call.message.text == 'Выберите пользователя':
+    if call.message.text == 'Выберите пользователя':  # обработка на удаление пользователя
         db.del_user(call.data)
         bot.send_message(call.from_user.id,
                          f'Пользователь <b>{call.message.reply_markup.keyboard[0][0].text}</b> удален',
                          parse_mode='html')
-    else:
+    else:  # обработка запроса для получения списка материала
         if call.data == 'regulations_ooip':
             bot.answer_callback_query(call.id, 'ОБРАТИТЕ ВНИМАНИЕ ! логин и пароль к  Conbiz доменные. Если вы не зарегестрированы на ресуре то обратитесь к отделу DevOps для добавления вас на Conbiz.', show_alert=True)
             for i in db.get_list_materials(call.data):
@@ -140,11 +144,14 @@ def search_courses(message):
         bot.register_next_step_handler(message, data_search)
 
 
-def data_search(message):
-    for i in db.data_search(message.text):
-        keyboard = types.InlineKeyboardMarkup()
-        keyboard.add(types.InlineKeyboardButton('Ссылка', url=i['href']))
-        bot.send_message(message.chat.id, i['name'], reply_markup=keyboard)
-
+def data_search(message):  # поиск по материалам
+    rec = db.data_search(message.text)
+    if rec:
+        for i in db.data_search(message.text):
+            keyboard = types.InlineKeyboardMarkup()
+            keyboard.add(types.InlineKeyboardButton('Ссылка', url=i['href']))
+            bot.send_message(message.chat.id, i['name'], reply_markup=keyboard)
+    else:
+        bot.send_message(message.chat.id, 'Простите, я нечего не нашел')
 
 bot.infinity_polling(none_stop=True)

@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
+"""
+ПАвтоматическая отправка пользователям о новом материале
+"""
+
 from datetime import datetime
 import pytz
 import time
 import telebot
 from telebot import types
 
-from modules import database
-import config
+import database
+from src import config
 
 
 db = database.Connection()
