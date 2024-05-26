@@ -114,7 +114,10 @@ def callback_query(call):
                 keyboard.add(types.InlineKeyboardButton('Ссылка', url=i['href']))
                 bot.send_message(call.from_user.id, i['name'], reply_markup=keyboard)
         elif call.data == 'seful_materials':
-            pass
+            for i in db.get_list_materials(call.data):
+                keyboard = types.InlineKeyboardMarkup()
+                keyboard.add(types.InlineKeyboardButton('Ссылка', url=i['href']))
+                bot.send_message(call.from_user.id, i['name'] + '\n' + i['description'], reply_markup=keyboard)
 
     bot.answer_callback_query(callback_query_id=call.id)
 
