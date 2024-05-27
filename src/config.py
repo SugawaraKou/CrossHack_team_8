@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-TG_TOKEN = '7407431084:AAGjqRWr21OaRlWE8mj04lcdI9FMFJjP0-M'
-TG_ADMIN_USER_ID = [687807958]  # user_id админинов
+# TG_TOKEN = '6655288653:AAE5Xlh4RunZwXBbIItmtmqy7FTsjsN_ymo'  # test
+TG_TOKEN = '7407431084:AAGjqRWr21OaRlWE8mj04lcdI9FMFJjP0-M'  # real
+TG_ADMIN_USER_ID = [687807958, 531248356]  # user_id админинов
 LIFE_TG_TOKEN = 300  # в секундах
 
 TG_HREF = 'https://t.me/knowledge_keeper_meow_bot?start='

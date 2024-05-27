@@ -3,4 +3,4 @@ DateTime~=5.3
 pyTelegramBotAPI==4.14.0
 qrcode==7.4.2
 google-api-python-client==2.130.0
-psycopg2==3.1.19
+psycopg2==2.9.9
